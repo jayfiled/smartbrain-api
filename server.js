@@ -11,7 +11,10 @@ const app = express();
 <br> &nbsp; &nbsp;at Layer.handle [as handle_request] (/home/jayfiled/Documents/git/smartbrain-api/node_modules/express/lib/router/layer.js:95:5)
  */
 
-app.use(bodyParser.json());
+app.use(bodyParser.json()); //Middleware
+
+// Remember that when nodemon restarts after a save, the variables will be reset, i.e.
+// if you add more users to your "database" variable, and then make some changes, then they will be reset
 
 const database = {
     users: [
@@ -36,7 +39,7 @@ const database = {
 }
 
 app.get('/', (req, res) => {
-    res.send('This is working! ')
+    res.send(database.users)
 })
 
 app.post('/signin', (req, res) => {
@@ -51,6 +54,21 @@ app.post('/signin', (req, res) => {
             res.status(400).json('Error logging in')
         }
 })  
+
+
+app.post('/register', (req, res) => {
+    const { email, name, password } = req.body;
+    database.users.push(
+        {
+            id: 1235,
+            name: name,
+            email: email,
+            password: password,
+            entries: 0,
+            joined: new Date()
+        })
+    res.json(database.users[database.users.length -1])
+})
 
 app.listen(3000, () => {
     console.log('App is running on port 3000')
