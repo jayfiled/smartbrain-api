@@ -1,19 +1,66 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 
 const app = express();
+
+// reuqire bodyParser to convern incoming json to an object, otherwise, when
+// you send a req from the site, you'll get a response that looks like:
+/* 
+<pre>TypeError: Cannot read property &#39;email&#39; of undefined
+<br> &nbsp; &nbsp;at app.post (/home/jayfiled/Documents/git/smartbrain-api/server.js:34:18)
+<br> &nbsp; &nbsp;at Layer.handle [as handle_request] (/home/jayfiled/Documents/git/smartbrain-api/node_modules/express/lib/router/layer.js:95:5)
+ */
+
+app.use(bodyParser.json());
+
+const database = {
+    users: [
+        {
+            id: 123,
+            name: 'John',
+            email: 'john@gmail.com',
+            password: 'cookies',
+            entries: 0,
+            joined: new Date()
+        },
+        {
+            id: 124,
+            name: 'Sally',
+            email: 'sally@gmail.com',
+            password: 'banannas',
+            entries: 0,
+            joined: new Date()
+        }
+
+    ]
+}
 
 app.get('/', (req, res) => {
     res.send('This is working! ')
 })
+
+app.post('/signin', (req, res) => {
+    // res.send('signin') you could use .send(), but you get some more features with
+    // .json()
+    if (req.body.email === 
+        database.users[0].email && 
+        req.body.password === 
+        database.users[0].password) {
+            res.json('success');
+        } else {
+            res.status(400).json('Error logging in')
+        }
+})  
 
 app.listen(3000, () => {
     console.log('App is running on port 3000')
 });
 
 
-// API Plan
 
 /* 
+
+API Plan
 
 legend:
 
@@ -29,6 +76,5 @@ endpoint --> via this type of request = respond with
 // and checks against other users score to give them a rank.
 
 /image --> PUT = user
-
 
 */
