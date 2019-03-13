@@ -15,6 +15,8 @@ app.use(bodyParser.json()); //Middleware
 
 // Remember that when nodemon restarts after a save, the variables will be reset, i.e.
 // if you add more users to your "database" variable, and then make some changes, then they will be reset
+// this is why we need a database
+// saves looping through our variables, and saves losing our work if the server gets restarted.
 
 const database = {
     users: [
