@@ -1,5 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const bcrypt = require('bcrypt-nodejs');
+
 
 const app = express();
 
@@ -24,7 +26,6 @@ const database = {
             id: '123',
             name: 'John',
             email: 'john@gmail.com',
-            password: 'cookies',
             entries: 0,
             joined: new Date()
         },
@@ -32,11 +33,17 @@ const database = {
             id: '124',
             name: 'Sally',
             email: 'sally@gmail.com',
-            password: 'banannas',
             entries: 0,
             joined: new Date()
         }
 
+    ],
+    login: [
+        {
+            id: '987',
+            hash: '',
+            email: 'john@gmail.com'
+        }
     ]
 }
 
@@ -47,7 +54,9 @@ app.get('/', (req, res) => {
 app.post('/signin', (req, res) => {
     // res.send('signin') you could use .send(), but you get some more features with
     // .json()
-    console.log(req.body);
+    bcrypt.compare("licketysplit", '$2a$10$FmN.NKakjNV2vJAw4lusKeXsVxpagN2ibHacIDvfYlC2Ri8FGfsgC', function(err, res) {
+        console.log(res);
+        });
     if (req.body.email === 
         database.users[0].email && 
         req.body.password === 
@@ -61,6 +70,10 @@ app.post('/signin', (req, res) => {
 
 app.post('/register', (req, res) => {
     const { email, name, password } = req.body;
+    // Store password (sent to server via HTTPS) as a hash in the DB
+    bcrypt.hash(password, null, null, function(err, hash) {
+        console.log(hash);
+    });
     database.users.push(
         {
             id: 1235,
@@ -103,29 +116,18 @@ app.put('/image', (req, res) => {
     }
 })
 
+// bcrypt.hash("bacon", null, null, function(err, hash) {
+//     // Store hash in your password DB.
+// });
+
+// // Load hash from your password DB.
+// bcrypt.compare("bacon", hash, function(err, res) {
+//     // res == true
+// });
+// bcrypt.compare("veggies", hash, function(err, res) {
+//     // res = false
+// });
+
 app.listen(3000, () => {
     console.log('App is running on port 3000')
 });
-
-
-
-/* 
-
-API Plan
-
-legend:
-
-endpoint --> via this type of request = respond with
-
-/ --> responds with = this is working
-/signin --> POST = success / fail
-/register --> POST = user object
-/profile/:userId --> GET = user
-
-// We want to work with a ranking; when someone submits a new photo
-// their ranking will go up, and a variable as a counter that goes up,
-// and checks against other users score to give them a rank.
-
-/image --> PUT = user
-
-*/
