@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt-nodejs');
+const cors = require('cors');
 
 
 const app = express();
@@ -14,6 +15,7 @@ const app = express();
  */
 
 app.use(bodyParser.json()); //Middleware
+app.use(cors());
 
 // Remember that when nodemon restarts after a save, the variables will be reset, i.e.
 // if you add more users to your "database" variable, and then make some changes, then they will be reset
@@ -25,6 +27,7 @@ const database = {
         {
             id: '123',
             name: 'John',
+            password: 'cookies',
             email: 'john@gmail.com',
             entries: 0,
             joined: new Date()
@@ -32,6 +35,7 @@ const database = {
         {
             id: '124',
             name: 'Sally',
+            password: 'banannas',
             email: 'sally@gmail.com',
             entries: 0,
             joined: new Date()
@@ -128,6 +132,6 @@ app.put('/image', (req, res) => {
 //     // res = false
 // });
 
-app.listen(3000, () => {
-    console.log('App is running on port 3000')
+app.listen(3001, () => {
+    console.log('App is running on port 3001')
 });
