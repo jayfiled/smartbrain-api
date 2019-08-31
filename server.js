@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 
 const app = express();
 
-// reuqire bodyParser to convern incoming json to an object, otherwise, when
+// require bodyParser to convert incoming json to an object, otherwise, when
 // you send a req from the site, you'll get a response that looks like:
 /* 
 <pre>TypeError: Cannot read property &#39;email&#39; of undefined
@@ -47,6 +47,7 @@ app.get('/', (req, res) => {
 app.post('/signin', (req, res) => {
     // res.send('signin') you could use .send(), but you get some more features with
     // .json()
+    console.log(req.body);
     if (req.body.email === 
         database.users[0].email && 
         req.body.password === 
@@ -72,6 +73,17 @@ app.post('/register', (req, res) => {
     res.json(database.users[database.users.length -1])
 })
 
+app.get('/profile/:id', (req, res) => {
+    const { id } = req.params;
+    database.users.forEach(user => {
+        if (user.id === id) {
+            res.json(user);
+        } else {
+            res.status(404).json('No such user');
+        }
+    })
+})
+
 app.listen(3000, () => {
     console.log('App is running on port 3000')
 });
@@ -86,7 +98,7 @@ legend:
 
 endpoint --> via this type of request = respond with
 
-/ --> res = this is working
+/ --> responds with = this is working
 /signin --> POST = success / fail
 /register --> POST = user object
 /profile/:userId --> GET = user
